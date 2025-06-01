@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CumbyMinerScan.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CumbyMinerScan.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CumbyMinerScan">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <DockPanel Margin="20">
+
+        <!-- 上半部分 -->
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
+            <TextBox Width="200" Watermark="请输入内容..." Text="{Binding InputText}" />
+            <Button Content="提交" Command="{Binding SubmitCommand}" Width="100" />
+        </StackPanel>
+
+        <!-- 下半部分：左文本框，右表格 -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0"
+                     AcceptsReturn="True"
+                     Text="{Binding OutputText}"
+                     IsReadOnly="True"
+                     FontSize="14" />
+
+            <DataGrid Grid.Column="1"
+                      ItemsSource="{Binding TableData}"
+                      AutoGenerateColumns="True"
+                      Margin="10 0 0 0" />
+        </Grid>
+    </DockPanel>
+
+</Window>
