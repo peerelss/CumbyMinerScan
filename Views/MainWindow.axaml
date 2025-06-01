@@ -21,6 +21,7 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
             <TextBox Width="200" Watermark="请输入内容..." Text="{Binding InputText}" />
             <Button Content="提交" Command="{Binding SubmitCommand}" Width="100" />
+            <Button Content="选择文件" Command="{Binding OpenFileCommand}" Width="200" />
         </StackPanel>
 
         <!-- 下半部分：左文本框，右表格 -->
