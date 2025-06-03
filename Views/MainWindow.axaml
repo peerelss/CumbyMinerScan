@@ -20,14 +20,20 @@
         <!-- 上半部分 -->
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
             <TextBox Width="200" Watermark="请输入内容..." Text="{Binding InputText}" />
+            <Button Content="选择文件" Command="{Binding OpenFileCommand}" Width="100" />
             <Button Content="提交" Command="{Binding SubmitCommand}" Width="100" />
-            <Button Content="选择文件" Command="{Binding OpenFileCommand}" Width="200" />
+            <Button Content="real time hash 0" Command="{Binding FilterT0Command}" Width="150" />
+            <Button Content="average hash 0" Command="{Binding FilterP0Command}" Width="150" />
+            <Button Content="待维修矿机" Command="{Binding SubmitCommand}" Width="100" />
+            <Button Content="待下架矿机" Command="{Binding SubmitCommand}" Width="100" />
+            <Button Content="功能测试" Command="{Binding TestCommand}" Width="100" />
         </StackPanel>
 
         <!-- 下半部分：左文本框，右表格 -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
@@ -36,11 +42,32 @@
                      Text="{Binding OutputText}"
                      IsReadOnly="True"
                      FontSize="14" />
-
             <DataGrid Grid.Column="1"
                       ItemsSource="{Binding TableData}"
                       AutoGenerateColumns="True"
                       Margin="10 0 0 0" />
+            <DataGrid Grid.Column="2" ItemsSource="{Binding TableDataMiner}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="数据行">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ItemsControl ItemsSource="{Binding Cells}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Margin="4,0" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </DockPanel>
 
