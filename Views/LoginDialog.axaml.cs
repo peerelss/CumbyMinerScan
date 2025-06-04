@@ -14,17 +14,24 @@ public partial class LoginDialog : ReactiveWindow<LoginDialogViewModel>
     public LoginDialog()
     {
         InitializeComponent();
-
         if (DataContext is LoginDialogViewModel vm)
         {
-            vm.CloseAction = CloseDialog;
+            vm.CloseAction = (confirmed, username, password) =>
+            {
+                // 关闭窗口时传递一个元组或自定义类型对象
+                this.Close((object)(confirmed, username, password));
+            };
         }
     }
 
-    private void CloseDialog(bool result)
+    public LoginDialog(LoginDialogViewModel vm) : this()
     {
-        Result = result;
-        Close();
+        DataContext = vm;
+
+        vm.CloseAction = (confirmed, username, password) =>
+        {
+            // 关闭窗口时传递一个元组或自定义类型对象
+            this.Close((object)(confirmed, username, password));
+        };
     }
-    
 }

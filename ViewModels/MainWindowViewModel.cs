@@ -25,6 +25,8 @@ namespace CumbyMinerScan.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    public string RequestUsername { get; set; }
+    public string RequestPassword { get; set; }
     public Interaction<Unit, string?> ShowFileDialog { get; }
     private string _inputText;
     private string _outputText;
@@ -128,6 +130,8 @@ public class MainWindowViewModel : ViewModelBase
             {
                 // 使用用户名密码
                 MessageText = $"用户名:{username},密码:{password}";
+                RequestUsername = username;
+                RequestPassword = password;
             }
             else
             {

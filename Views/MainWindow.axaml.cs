@@ -42,20 +42,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         });
         
     }
-    public async Task<(bool Confirmed, string Username, string Password)> ShowLoginDialog()
-    {
-        var loginDialog = new LoginDialog();
-        var result = await loginDialog.ShowDialog<bool?>(this);
-
-        if (result == true && loginDialog.DataContext is LoginDialogViewModel vm)
-        {
-            return (true, vm.Username, vm.Password);
-        }
-        else
-        {
-            return (false, "", "");
-        }
-    }
+    
     
      
 }

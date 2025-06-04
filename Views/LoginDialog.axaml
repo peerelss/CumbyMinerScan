@@ -7,14 +7,14 @@
         x:Class="CumbyMinerScan.Views.LoginDialog"
         x:DataType="vm:LoginDialogViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="CumbyMinerScan">
+        Title="设置用户名密码">
 
 
-    <Design.DataContext>
+    <Window.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:LoginDialogViewModel />
-    </Design.DataContext>
+    </Window.DataContext>
     <StackPanel Margin="20" Spacing="10">
         <TextBlock Text="请输入用户名和密码" FontWeight="Bold" FontSize="16" />
 

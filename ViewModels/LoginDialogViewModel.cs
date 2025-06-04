@@ -22,19 +22,23 @@ public class LoginDialogViewModel : ViewModelBase
     }
 
     // 关闭窗口的接口
-    public Action<bool>? CloseAction { get; set; }
+    public Action<bool, string, string>? CloseAction { get; set; }
 
     public ICommand OkCommand { get; }
     public ICommand CancelCommand { get; }
 
     public LoginDialogViewModel()
     {
-        OkCommand = ReactiveCommand.Create(() => { CloseAction?.Invoke(true); });
+        OkCommand = ReactiveCommand.Create(() =>
+        {
+            Console.WriteLine($"登录 用户名:{_username},密码:{_password}");
+            CloseAction?.Invoke(true, _username, _password);
+        });
 
         CancelCommand = ReactiveCommand.Create(() =>
         {
-            Console.WriteLine("ok ok");
-            CloseAction?.Invoke(false);
+            Console.WriteLine($"取消登录 用户名:{_username},密码:{_password}");
+            CloseAction?.Invoke(false, "", "");
         });
     }
 }
