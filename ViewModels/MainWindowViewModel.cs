@@ -25,8 +25,9 @@ namespace CumbyMinerScan.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public string RequestUsername { get; set; }
-    public string RequestPassword { get; set; }
+    public string RequestUsername { get; set; } = "root";
+    public string RequestPassword { get; set; } = "root";
+    public string RequestData { get; set; } = "{\"blink\":true}";
     public Interaction<Unit, string?> ShowFileDialog { get; }
     private string _inputText;
     private string _outputText;
@@ -132,6 +133,10 @@ public class MainWindowViewModel : ViewModelBase
                 MessageText = $"用户名:{username},密码:{password}";
                 RequestUsername = username;
                 RequestPassword = password;
+                var result =
+                    await HttpHelper.GetDigestProtectedResourceAsync("http://10.11.2.97/cgi-bin/blink.cgi",
+                        username, password, RequestData);
+                Console.WriteLine(result);
             }
             else
             {

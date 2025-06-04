@@ -9,7 +9,7 @@
         Icon="/Assets/miner.ico"
         Title="CumbyMinerScan">
 
-    
+
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -35,6 +35,10 @@
                 <Button Content="选择文件" Command="{Binding OpenFileCommand}" HorizontalContentAlignment="Center"
                         Width="150" />
                 <Button Content="提交" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center" Width="150" />
+                <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}" HorizontalContentAlignment="Center"
+                        Width="150" />
+                <Button Content="导出表格" Command="{Binding ExportCommand}" HorizontalContentAlignment="Center"
+                        Width="150" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
                 <Button Content="real time hash 0" Command="{Binding FilterT0Command}"
@@ -52,14 +56,17 @@
             <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
                 <Button Content="点亮" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center" Width="150" />
                 <Button Content="重启" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center" Width="150" />
-                <Button Content="导出表格" Command="{Binding ExportCommand}" HorizontalContentAlignment="Center" Width="150" />
+                <Button Content="列出风扇问题" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
+                        Width="150" />
+                <Button Content="唤醒矿机" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
+                        Width="150" />
                 <Button Content="弹窗" Command="{Binding MessageCommand}" HorizontalContentAlignment="Center" Width="150" />
-                <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}" HorizontalContentAlignment="Center" Width="150" />
+
             </StackPanel>
-            
-            <TextBlock  Foreground="Green" FontWeight="Bold" FontSize="16"  Text="{Binding MessageText}" Margin="0,0,0,5"/>
+
+            <TextBlock Foreground="Green" FontWeight="Bold" FontSize="16" Text="{Binding MessageText}" Margin="0,0,0,5" />
         </StackPanel>
-            
+
         <!-- 下半部分：左文本框，右表格 -->
         <Grid>
             <Grid.ColumnDefinitions>
