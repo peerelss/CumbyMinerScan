@@ -1,5 +1,6 @@
 using System;
 using System.Reactive.Disposables;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using CumbyMinerScan.ViewModels;
@@ -30,7 +31,31 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
                 interaction.SetOutput(result?.Length > 0 ? result[0] : null);
             }).DisposeWith(disposables);
         });
+        this.WhenActivated(disposables =>
+        {
+            ViewModel!.ShowLoginDialog.RegisterHandler(async interaction =>
+            {
+                var dialog = new LoginDialog(); // 你自定义的对话框窗口
+                var result = await dialog.ShowDialog<(bool, string, string)>(this);
+                interaction.SetOutput(result);
+            }).DisposeWith(disposables);
+        });
+        
     }
+    public async Task<(bool Confirmed, string Username, string Password)> ShowLoginDialog()
+    {
+        var loginDialog = new LoginDialog();
+        var result = await loginDialog.ShowDialog<bool?>(this);
 
+        if (result == true && loginDialog.DataContext is LoginDialogViewModel vm)
+        {
+            return (true, vm.Username, vm.Password);
+        }
+        else
+        {
+            return (false, "", "");
+        }
+    }
+    
      
 }

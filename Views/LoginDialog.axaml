@@ -1,0 +1,30 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CumbyMinerScan.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+        x:Class="CumbyMinerScan.Views.LoginDialog"
+        x:DataType="vm:LoginDialogViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CumbyMinerScan">
+
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:LoginDialogViewModel />
+    </Design.DataContext>
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="请输入用户名和密码" FontWeight="Bold" FontSize="16" />
+
+        <TextBox Watermark="用户名" Text="{Binding Username}" />
+
+        <TextBox Watermark="密码" Text="{Binding Password}" PasswordChar="●" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10" Margin="0,10,0,0">
+            <Button Content="取消" Command="{Binding CancelCommand}" HorizontalContentAlignment="Center" Width="150" />
+            <Button Content="确定" Command="{Binding OkCommand}" HorizontalContentAlignment="Center" Width="150" />
+        </StackPanel>
+    </StackPanel>
+</Window>

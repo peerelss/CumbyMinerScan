@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
@@ -13,6 +15,10 @@ using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CumbyMinerScan.Models;
 using CumbyMinerScan.Utils;
+using CumbyMinerScan.Views;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
 using ReactiveUI;
 
 namespace CumbyMinerScan.ViewModels;
@@ -22,7 +28,11 @@ public class MainWindowViewModel : ViewModelBase
     public Interaction<Unit, string?> ShowFileDialog { get; }
     private string _inputText;
     private string _outputText;
+    private string _messageText = "这里显示操作结果";
     public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenLoginCommand { get; }
+
+    public event Action? RequestLogin;
 
     public string InputText
     {
@@ -34,6 +44,12 @@ public class MainWindowViewModel : ViewModelBase
     {
         get => _outputText;
         set => this.RaiseAndSetIfChanged(ref _outputText, value);
+    }
+
+    public string MessageText
+    {
+        get => _messageText;
+        set => this.RaiseAndSetIfChanged(ref _messageText, value);
     }
 
     public ObservableCollection<TableItem> TableData { get; } = new ObservableCollection<TableItem>();
@@ -66,10 +82,23 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand ExportCommand { get; }
     public ICommand RebootCommand { get; }
     public ICommand LightOnCommand { get; }
+    public ICommand MessageCommand { get; }
+    public ICommand SettingCommand { get; }
+    public Interaction<Unit, (bool confirmed, string username, string password)> ShowLoginDialog { get; } = new();
+
+    private List<string> GetIPList()
+    {
+        var ips = _outputText
+            .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(ip => ip.Trim())
+            .Where(ip => IPAddress.TryParse(ip, out _)) // 只保留合法IP
+            .ToList();
+        return ips;
+    }
 
     public MainWindowViewModel()
     {
-        ExportCommand = ReactiveCommand.Create(() =>
+        ExportCommand = ReactiveCommand.Create(async () =>
         {
             try
             {
@@ -77,6 +106,12 @@ public class MainWindowViewModel : ViewModelBase
                 var fileName = $"miner_data_{timestamp}.csv";
                 CsvExporter.ExportToCsv(TableDataMiner.ToList(), fileName);
                 Console.WriteLine("✅ 导出成功！");
+                var box = MessageBoxManager
+                    .GetMessageBoxStandard("Caption", $"{fileName}文件已经成功导出",
+                        ButtonEnum.YesNo);
+
+                var result = await box.ShowAsync();
+                OpenFolderAndSelectFile(fileName);
             }
             catch (Exception ex)
             {
@@ -84,15 +119,44 @@ public class MainWindowViewModel : ViewModelBase
                 Console.WriteLine("导出时发生异常: " + ex.Message);
             }
         });
+        // 设置用户名和密码
+        SettingCommand = ReactiveCommand.Create(() => { });
+        OpenLoginCommand = ReactiveCommand.CreateFromTask(async () =>
+        {
+            var (confirmed, username, password) = await ShowLoginDialog.Handle(Unit.Default);
+            if (confirmed)
+            {
+                // 使用用户名密码
+                MessageText = $"用户名:{username},密码:{password}";
+            }
+            else
+            {
+                MessageText = $"取消登录 用户名:{username},密码:{password}";
+            }
+        });
+
         RebootCommand = ReactiveCommand.Create(() =>
         {
             // 重启列表中机器
         });
         LightOnCommand = ReactiveCommand.Create(() =>
         {
-            // 点亮列表中机器
+            var ips = GetIPList();
+            if (ips.Count == 0)
+            {
+                var box = MessageBoxManager
+                    .GetMessageBoxStandard("Caption", $"IP列表为0，请重新填写",
+                        ButtonEnum.YesNo);
+            }
         });
+        MessageCommand = ReactiveCommand.Create(async () =>
+        {
+            var box = MessageBoxManager
+                .GetMessageBoxStandard("Caption", "Are you sure you would like to delete appender_replace_page_1?",
+                    ButtonEnum.YesNo);
 
+            var result = await box.ShowAsync();
+        });
         TestCommand = ReactiveCommand.Create(async () =>
         {
             string prefix = "http://";
@@ -112,25 +176,18 @@ public class MainWindowViewModel : ViewModelBase
             {
                 urls.Add("http://" + ip + "/cgi-bin/hlog.cgi");
             }
-
             // 调用并行请求方法，await不会阻塞UI线程
-            foreach (var url in urls)
-            {
-                Console.WriteLine(url);
-            }
 
             List<string> htmlResults = await HttpHelper.GetHtmlListParallelAsync(urls);
+            var box = MessageBoxManager
+                .GetMessageBoxStandard("Caption", "所有IP已经解析完毕",
+                    ButtonEnum.YesNo);
             var minerErrors = new List<DataRowViewModel>();
             // 处理结果，比如绑定到UI
             for (int i = 0; i < urls.Count; i++)
             {
                 var errorMiner = LogHelper.ParseLog(ips[i], htmlResults[i]);
                 minerErrors.Add(errorMiner);
-            }
-
-            for (int i = 0; i < minerErrors.Count; i++)
-            {
-                Console.WriteLine($"第{i}行: {string.Join(", ", minerErrors[i])}");
             }
 
             TableDataMiner.Clear();
@@ -281,5 +338,16 @@ public class MainWindowViewModel : ViewModelBase
         }
 
         return result;
+    }
+
+    public static void OpenFolderAndSelectFile(string relativePath)
+    {
+        string fullPath = Path.GetFullPath(relativePath);
+
+        if (OperatingSystem.IsWindows() && File.Exists(fullPath))
+        {
+            var argument = $"/select,\"{fullPath}\"";
+            Process.Start("explorer.exe", argument);
+        }
     }
 }
