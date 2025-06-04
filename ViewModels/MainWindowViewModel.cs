@@ -12,6 +12,7 @@ using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using CumbyMinerScan.Models;
+using CumbyMinerScan.Utils;
 using ReactiveUI;
 
 namespace CumbyMinerScan.ViewModels;
@@ -62,9 +63,82 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand FilterP0Command { get; }
     public ICommand SelectCommand { get; }
     public ICommand TestCommand { get; }
+    public ICommand ExportCommand { get; }
+    public ICommand RebootCommand { get; }
+    public ICommand LightOnCommand { get; }
 
     public MainWindowViewModel()
     {
+        ExportCommand = ReactiveCommand.Create(() =>
+        {
+            try
+            {
+                var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                var fileName = $"miner_data_{timestamp}.csv";
+                CsvExporter.ExportToCsv(TableDataMiner.ToList(), fileName);
+                Console.WriteLine("✅ 导出成功！");
+            }
+            catch (Exception ex)
+            {
+                // 记录错误或通知用户
+                Console.WriteLine("导出时发生异常: " + ex.Message);
+            }
+        });
+        RebootCommand = ReactiveCommand.Create(() =>
+        {
+            // 重启列表中机器
+        });
+        LightOnCommand = ReactiveCommand.Create(() =>
+        {
+            // 点亮列表中机器
+        });
+
+        TestCommand = ReactiveCommand.Create(async () =>
+        {
+            string prefix = "http://";
+            string suffix = "/cgi-bin/hlog.cgi";
+            var ips = _outputText
+                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(ip => ip.Trim()) // 清除前后空格
+                .ToList();
+            foreach (var ip in ips)
+            {
+                Console.WriteLine($"http://{ip}/cgi-bin/hlog.cgi");
+            }
+
+
+            var urls = new List<string>();
+            foreach (var ip in ips)
+            {
+                urls.Add("http://" + ip + "/cgi-bin/hlog.cgi");
+            }
+
+            // 调用并行请求方法，await不会阻塞UI线程
+            foreach (var url in urls)
+            {
+                Console.WriteLine(url);
+            }
+
+            List<string> htmlResults = await HttpHelper.GetHtmlListParallelAsync(urls);
+            var minerErrors = new List<DataRowViewModel>();
+            // 处理结果，比如绑定到UI
+            for (int i = 0; i < urls.Count; i++)
+            {
+                var errorMiner = LogHelper.ParseLog(ips[i], htmlResults[i]);
+                minerErrors.Add(errorMiner);
+            }
+
+            for (int i = 0; i < minerErrors.Count; i++)
+            {
+                Console.WriteLine($"第{i}行: {string.Join(", ", minerErrors[i])}");
+            }
+
+            TableDataMiner.Clear();
+            foreach (var row in minerErrors)
+            {
+                TableDataMiner.Add(row);
+            }
+        });
         SubmitCommand = ReactiveCommand.Create(OnSubmit);
         SelectCommand = ReactiveCommand.Create(OnSelect);
         FilterT0Command = ReactiveCommand.Create(() =>
@@ -136,12 +210,10 @@ public class MainWindowViewModel : ViewModelBase
             // 清洗后尝试将第5、6列转换为数字
             string realStr = Regex.Replace(row.Cells[4], @"[^\d\.]", "").Trim();
             string avgStr = Regex.Replace(row.Cells[5], @"[^\d\.]", "").Trim();
-            Console.WriteLine($"{realStr}，，{avgStr}");
             bool realParsed = float.TryParse(realStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float realVal);
             bool avgParsed = float.TryParse(avgStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float avgVal);
-            Console.WriteLine($"{realVal}，，{avgVal}");
             if (realVal == 0 && avgVal != 0)
             {
                 _filteredT0Rows.Add(row);
@@ -160,7 +232,6 @@ public class MainWindowViewModel : ViewModelBase
             // 清洗后尝试将第5、6列转换为数字
             string realStr = Regex.Replace(row.Cells[4], @"[^\d\.]", "").Trim();
             string avgStr = Regex.Replace(row.Cells[5], @"[^\d\.]", "").Trim();
-            Console.WriteLine($"{realStr}，，{avgStr}");
             bool realParsed = float.TryParse(realStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float realVal);
             bool avgParsed = float.TryParse(avgStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,

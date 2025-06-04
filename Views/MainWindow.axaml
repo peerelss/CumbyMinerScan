@@ -27,12 +27,14 @@
             <Button Content="待维修矿机" Command="{Binding SubmitCommand}" Width="100" />
             <Button Content="待下架矿机" Command="{Binding SubmitCommand}" Width="100" />
             <Button Content="功能测试" Command="{Binding TestCommand}" Width="100" />
+            <Button Content="点亮" Command="{Binding LightOnCommand}" Width="100" />
+            <Button Content="重启" Command="{Binding RebootCommand}" Width="100" />
+            <Button Content="导出表格" Command="{Binding ExportCommand}" Width="100" />
         </StackPanel>
 
         <!-- 下半部分：左文本框，右表格 -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
@@ -40,12 +42,8 @@
             <TextBox Grid.Column="0"
                      AcceptsReturn="True"
                      Text="{Binding OutputText}"
-                     IsReadOnly="True"
+                     IsReadOnly="False"
                      FontSize="14" />
-            <DataGrid Grid.Column="1"
-                      ItemsSource="{Binding TableData}"
-                      AutoGenerateColumns="True"
-                      Margin="10 0 0 0" />
             <DataGrid Grid.Column="2" ItemsSource="{Binding TableDataMiner}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="数据行">
