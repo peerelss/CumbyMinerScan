@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 public static class HttpHelper
@@ -12,11 +14,14 @@ public static class HttpHelper
 
     private static string _userPassword = "root";
 
+    private static string _httpPre = "http://";
+
     //重启矿机
     private static string _reboot = "/cgi-bin/reboot.cgi";
 
     //点亮矿机
     private static string _lightMiner = "/cgi-bin/blink.cgi";
+    private static string _lightData = "{\"blink\":true}";
     private static readonly HttpClient _httpClient = new HttpClient();
 
     // 单个请求
@@ -69,6 +74,44 @@ public static class HttpHelper
 
         // 转换成List返回
         return new List<string>(results);
+    }
+
+    public static async Task<string> LightMiner(string ip)
+    {
+        var resultContent =
+            await GetDigestProtectedResourceAsync(_httpPre + ip + _lightMiner, _userName, _userPassword, _lightData);
+        return resultContent;
+    }
+
+    public static async Task<List<List<string>>> LightMinerList(List<string> ipList)
+    {
+        var tasks = ipList.Select(async ip =>
+        {
+            try
+            {
+                var json = await GetDigestProtectedResourceAsync(
+                    _httpPre + ip + _lightMiner, _userName, _userPassword, _lightData);
+
+                using var doc = JsonDocument.Parse(json);
+                var code = doc.RootElement.GetProperty("code").GetString();
+
+                if (code == "B000")
+                {
+                    return new List<string> { ip, "success" };
+                }
+
+                else
+                {
+                    return new List<string> { ip, $"failure: code={code}" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<string> { ip, $"failure: Message={ex.Message}" };
+            }
+        });
+
+        return (await Task.WhenAll(tasks)).ToList();
     }
 
     public static async Task<string> GetDigestProtectedResourceAsync(string url, string username, string password,

@@ -148,7 +148,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             // 重启列表中机器
         });
-        LightOnCommand = ReactiveCommand.Create(() =>
+        LightOnCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var ips = GetIPList();
             if (ips.Count == 0)
@@ -156,6 +156,19 @@ public class MainWindowViewModel : ViewModelBase
                 var box = MessageBoxManager
                     .GetMessageBoxStandard("Caption", $"IP列表为0，请重新填写",
                         ButtonEnum.YesNo);
+            }
+            else
+            {
+                var resultStrings = await HttpHelper.LightMinerList(ips);
+                TableDataMiner.Clear();
+                List<DataRowViewModel> dataRows = resultStrings.Select(row => new DataRowViewModel
+                {
+                    Cells = row
+                }).ToList();
+                foreach (var dataRow in dataRows)
+                {
+                    TableDataMiner.Add(dataRow);
+                }
             }
         });
         MessageCommand = ReactiveCommand.Create(async () =>
