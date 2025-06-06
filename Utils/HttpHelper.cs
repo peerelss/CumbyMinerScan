@@ -21,7 +21,8 @@ public static class HttpHelper
 
     //点亮矿机
     private static string _lightMiner = "/cgi-bin/blink.cgi";
-    private static string _lightData = "{\"blink\":true}";
+    private static string _lightOnData = "{\"blink\":true}";
+    private static string _lightOffData = "{\"blink\":false}";
     private static readonly HttpClient _httpClient = new HttpClient();
 
     // 单个请求
@@ -79,7 +80,7 @@ public static class HttpHelper
     public static async Task<string> LightMiner(string ip)
     {
         var resultContent =
-            await GetDigestProtectedResourceAsync(_httpPre + ip + _lightMiner, _userName, _userPassword, _lightData);
+            await GetDigestProtectedResourceAsync(_httpPre + ip + _lightMiner, _userName, _userPassword, _lightOnData);
         return resultContent;
     }
 
@@ -90,7 +91,7 @@ public static class HttpHelper
             try
             {
                 var json = await GetDigestProtectedResourceAsync(
-                    _httpPre + ip + _lightMiner, _userName, _userPassword, _lightData);
+                    _httpPre + ip + _lightMiner, _userName, _userPassword, _lightOnData);
 
                 using var doc = JsonDocument.Parse(json);
                 var code = doc.RootElement.GetProperty("code").GetString();

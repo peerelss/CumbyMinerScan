@@ -3,9 +3,11 @@
         xmlns:vm="using:CumbyMinerScan.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="800"
+        mc:Ignorable="d" d:DesignWidth="1300" d:DesignHeight="800"
         x:Class="CumbyMinerScan.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        Width="1400"
+        Height="800"
         Icon="/Assets/miner.ico"
         Title="CumbyMinerScan">
 
@@ -27,45 +29,81 @@
         </Style>
     </Window.Resources>
     <DockPanel Margin="20">
+        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
+                <StackPanel Orientation="Vertical" Margin="0 0 0 10" Spacing="10">
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                        <TextBox Width="470" Watermark="请输入内容..." Text="{Binding InputText}" />
+                        <Button Content="选择文件" Command="{Binding OpenFileCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="提交" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}"
+                                HorizontalContentAlignment="Center"
+                                Width="150" />
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                        <Button Content="实时0算力矿机" Command="{Binding FilterT0Command}"
+                                HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="平均0算力矿机" Command="{Binding FilterP0Command}"
+                                HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="待维修IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="待下架IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="定位问题" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                        <Button Content="点亮" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="重启" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="列出风扇问题" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="唤醒矿机" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="弹窗" Command="{Binding MessageCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="导出表格" Command="{Binding ExportCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                    </StackPanel>
+
+                    <TextBlock Foreground="Green" FontWeight="Bold" FontSize="16" Text="{Binding MessageText}"
+                               Margin="0,0,0,5" />
+
+                </StackPanel>
+                <StackPanel Margin="20,0,0,5" Orientation="Horizontal">
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
+                        <StackPanel Width="100">
+                            <TextBlock Text="实时0算力机器" Margin="0,0,0,5" />
+                            <CheckBox Content="风扇故障" IsChecked="{Binding FanIssue}" />
+                            <CheckBox Content="高温" IsChecked="{Binding FanIssue}" />
+                            <CheckBox Content="网络问题" IsChecked="{Binding FanIssue}" />
+                            <CheckBox Content="掉电压" IsChecked="{Binding FanIssue}" />
+                        </StackPanel>
+                    </Border>
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
+                        <StackPanel>
+
+                            <TextBlock Text="一直0算力机器" Margin="0,0,0,5" />
+                            <CheckBox Content="掉芯片" IsChecked="{Binding FanIssue}" />
+                            <CheckBox Content="掉算力板" IsChecked="{Binding FanIssue}" />
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+
+            </StackPanel>
+
+
+        </StackPanel>
 
         <!-- 上半部分 -->
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                <TextBox Width="470" Watermark="请输入内容..." Text="{Binding InputText}" />
-                <Button Content="选择文件" Command="{Binding OpenFileCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="提交" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center" Width="150" />
-                <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="导出表格" Command="{Binding ExportCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                <Button Content="real time hash 0" Command="{Binding FilterT0Command}"
-                        HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="average hash 0" Command="{Binding FilterP0Command}"
-                        HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="待维修IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="待下架IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="定位问题" Command="{Binding TestCommand}" HorizontalContentAlignment="Center" Width="150" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                <Button Content="点亮" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center" Width="150" />
-                <Button Content="重启" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center" Width="150" />
-                <Button Content="列出风扇问题" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="唤醒矿机" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
-                        Width="150" />
-                <Button Content="弹窗" Command="{Binding MessageCommand}" HorizontalContentAlignment="Center" Width="150" />
 
-            </StackPanel>
-
-            <TextBlock Foreground="Green" FontWeight="Bold" FontSize="16" Text="{Binding MessageText}" Margin="0,0,0,5" />
-        </StackPanel>
 
         <!-- 下半部分：左文本框，右表格 -->
         <Grid>

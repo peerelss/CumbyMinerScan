@@ -25,6 +25,10 @@ namespace CumbyMinerScan.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    public bool FanIssue { get; set; }
+    public bool HashBoardIssue { get; set; }
+    public bool PowerIssue { get; set; }
+    public bool TempIssue { get; set; }
     public string RequestUsername { get; set; } = "root";
     public string RequestPassword { get; set; } = "root";
     public string RequestData { get; set; } = "{\"blink\":true}";
@@ -87,6 +91,7 @@ public class MainWindowViewModel : ViewModelBase
     public ICommand LightOnCommand { get; }
     public ICommand MessageCommand { get; }
     public ICommand SettingCommand { get; }
+    public ICommand ListFanCommand { get; }
     public Interaction<Unit, (bool confirmed, string username, string password)> ShowLoginDialog { get; } = new();
 
     private List<string> GetIPList()

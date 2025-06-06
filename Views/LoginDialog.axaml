@@ -6,6 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
         x:Class="CumbyMinerScan.Views.LoginDialog"
         x:DataType="vm:LoginDialogViewModel"
+        Width="400"
+        Height="300"
         Icon="/Assets/avalonia-logo.ico"
         Title="设置用户名密码">
 
