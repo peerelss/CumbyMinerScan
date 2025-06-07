@@ -298,7 +298,7 @@ public class MainWindowViewModel : ViewModelBase
                 out float realVal);
             bool avgParsed = float.TryParse(avgStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float avgVal);
-            if (realVal == 0 && avgVal != 0)
+            if (realVal == 0 )
             {
                 _filteredT0Rows.Add(row);
             }
