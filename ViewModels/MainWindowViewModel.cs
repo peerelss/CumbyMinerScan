@@ -82,11 +82,13 @@ public class MainWindowViewModel : ViewModelBase
     // 配置矿机的错误码，问题归类，解决意见
     public ICommand IssueConfigCommand { get; }
 
+    public ICommand TestCommand { get; }
+
     // 过滤瞬时为0但平均不为0的矿机
     public ICommand FilterT0Command { get; }
     public ICommand FilterP0Command { get; }
     public ICommand SelectCommand { get; }
-    public ICommand TestCommand { get; }
+    public ICommand DetectIssueCommand { get; }
     public ICommand ExportCommand { get; }
     public ICommand RebootCommand { get; }
     public ICommand LightOnCommand { get; }
@@ -154,6 +156,11 @@ public class MainWindowViewModel : ViewModelBase
         {
             // 重启列表中机器
         });
+        TestCommand = ReactiveCommand.Create(() =>
+        {
+            var ips = GetIPList();
+            
+        });
         LightOnCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var ips = GetIPList();
@@ -185,15 +192,16 @@ public class MainWindowViewModel : ViewModelBase
 
             var result = await box.ShowAsync();
         });
-        TestCommand = ReactiveCommand.Create(async () =>
+        DetectIssueCommand = ReactiveCommand.Create(async () =>
         {
+            MessageText = "开始检测0算计机器的问题";
             string prefix = "http://";
             string suffix = "/cgi-bin/hlog.cgi";
             var ips = _outputText
                 .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(ip => ip.Trim()) // 清除前后空格
                 .ToList();
-            
+
             var urls = new List<string>();
             foreach (var ip in ips)
             {
@@ -218,6 +226,8 @@ public class MainWindowViewModel : ViewModelBase
             {
                 TableDataMiner.Add(row);
             }
+
+            MessageText = "检测0算计机器的问题完毕";
         });
         IssueConfigCommand = ReactiveCommand.Create(OnSubmit);
         SelectCommand = ReactiveCommand.Create(OnSelect);

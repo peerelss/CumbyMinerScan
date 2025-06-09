@@ -55,7 +55,9 @@
                                 Width="150" />
                         <Button Content="待下架IP" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />
-                        <Button Content="定位问题" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
+                        <Button Content="定位问题" Command="{Binding DetectIssueCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                        <Button Content="功能测试" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">

@@ -20,48 +20,8 @@ public static class LogHelper
             ("endswith", "nonce crc error", "nonce crc error"),
         };
 
-        var filePath = "error_patterns.csv";
 
-        var result = new List<(string, string, string)>();
-
-        try
-        {
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException();
-
-            var lines = File.ReadAllLines(filePath);
-
-            foreach (var line in lines)
-            {
-                // 跳过空行或标题行
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("method"))
-                    continue;
-
-                var parts = line.Split(',');
-
-                if (parts.Length >= 3)
-                {
-                    string method = parts[0].Trim();
-                    string pattern = parts[1].Trim();
-                    string label = parts[2].Trim();
-
-                    result.Add((method, pattern, label));
-                }
-            }
-
-            if (result.Count == 0)
-            {
-                throw new Exception("CSV内容为空或格式不对");
-            }
-
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"no such file use default config: {ex.Message}");
-            return fallbackPatterns;
-        }
+        return fallbackPatterns;
     }
 
     public static DataRowViewModel ParseLog(string ip, string hlogStr)
