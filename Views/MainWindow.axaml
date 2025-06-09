@@ -36,11 +36,12 @@
                         <TextBox Width="470" Watermark="请输入内容..." Text="{Binding InputText}" />
                         <Button Content="选择文件" Command="{Binding OpenFileCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />
-                        <Button Content="提交" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
                         <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}"
                                 HorizontalContentAlignment="Center"
                                 Width="150" />
+                        <Button Content="配置错误码和关键词" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
+                                Width="150" />
+                       
 
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
@@ -50,9 +51,9 @@
                         <Button Content="平均0算力矿机" Command="{Binding FilterP0Command}"
                                 HorizontalContentAlignment="Center"
                                 Width="150" />
-                        <Button Content="待维修IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
+                        <Button Content="待维修IP" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />
-                        <Button Content="待下架IP" Command="{Binding SubmitCommand}" HorizontalContentAlignment="Center"
+                        <Button Content="待下架IP" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />
                         <Button Content="定位问题" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
                                 Width="150" />

@@ -79,7 +79,8 @@ public class MainWindowViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _tableData, value);
     }
 
-    public ICommand SubmitCommand { get; }
+    // 配置矿机的错误码，问题归类，解决意见
+    public ICommand IssueConfigCommand { get; }
 
     // 过滤瞬时为0但平均不为0的矿机
     public ICommand FilterT0Command { get; }
@@ -192,12 +193,7 @@ public class MainWindowViewModel : ViewModelBase
                 .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(ip => ip.Trim()) // 清除前后空格
                 .ToList();
-            foreach (var ip in ips)
-            {
-                Console.WriteLine($"http://{ip}/cgi-bin/hlog.cgi");
-            }
-
-
+            
             var urls = new List<string>();
             foreach (var ip in ips)
             {
@@ -223,7 +219,7 @@ public class MainWindowViewModel : ViewModelBase
                 TableDataMiner.Add(row);
             }
         });
-        SubmitCommand = ReactiveCommand.Create(OnSubmit);
+        IssueConfigCommand = ReactiveCommand.Create(OnSubmit);
         SelectCommand = ReactiveCommand.Create(OnSelect);
         FilterT0Command = ReactiveCommand.Create(() =>
         {
@@ -298,7 +294,7 @@ public class MainWindowViewModel : ViewModelBase
                 out float realVal);
             bool avgParsed = float.TryParse(avgStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float avgVal);
-            if (realVal == 0 )
+            if (realVal == 0)
             {
                 _filteredT0Rows.Add(row);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CumbyMinerScan.Models;
 
@@ -7,12 +8,9 @@ namespace CumbyMinerScan.Utils;
 
 public static class LogHelper
 {
-    public static DataRowViewModel ParseLog(string ip, string hlogStr)
-
+    public static List<(string method, string pattern, string label)> LoadErrorPatterns()
     {
-        string[] logList = hlogStr.Split('\n');
-        // 定义错误模式及对应标签，元组：(匹配方式, 模式字符串, 标签)
-        var errorPatterns = new List<(string method, string pattern, string label)>
+        var fallbackPatterns = new List<(string, string, string)>
         {
             ("endswith", "asic, times 2", "miss asci"),
             ("in", "Not enough chain", "Not enough chain"),
@@ -20,9 +18,58 @@ public static class LogHelper
             ("in", "ERROR_TEMP_TOO_HIGH", "ERROR_TEMP_TOO_HIGH"),
             ("in", "ERROR_FAN_LOST", "ERROR_FAN_LOST"),
             ("endswith", "nonce crc error", "nonce crc error"),
-            // ("endswith", "eeprom load ret:0", "eeprom load ret:0"),
-            // ("in", "ERROR_SOC_INIT", "ERROR_SOC_INIT"),
         };
+
+        var filePath = "error_patterns.csv";
+
+        var result = new List<(string, string, string)>();
+
+        try
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException();
+
+            var lines = File.ReadAllLines(filePath);
+
+            foreach (var line in lines)
+            {
+                // 跳过空行或标题行
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("method"))
+                    continue;
+
+                var parts = line.Split(',');
+
+                if (parts.Length >= 3)
+                {
+                    string method = parts[0].Trim();
+                    string pattern = parts[1].Trim();
+                    string label = parts[2].Trim();
+
+                    result.Add((method, pattern, label));
+                }
+            }
+
+            if (result.Count == 0)
+            {
+                throw new Exception("CSV内容为空或格式不对");
+            }
+
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"no such file use default config: {ex.Message}");
+            return fallbackPatterns;
+        }
+    }
+
+    public static DataRowViewModel ParseLog(string ip, string hlogStr)
+
+    {
+        string[] logList = hlogStr.Split('\n');
+        // 定义错误模式及对应标签，元组：(匹配方式, 模式字符串, 标签)
+        var errorPatterns = LoadErrorPatterns();
 
         foreach (var logStrRaw in logList)
         {
