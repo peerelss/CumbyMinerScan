@@ -18,131 +18,132 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Window.Resources>
-        <Style x:Key="StyledButton" Selector="Button">
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Height" Value="36" />
-            <Setter Property="MinWidth" Value="100" />
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-        </Style>
-    </Window.Resources>
-    <DockPanel Margin="20">
-        <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
-            <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
-                <StackPanel Orientation="Vertical" Margin="0 0 0 10" Spacing="10">
-                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                        <TextBox Width="470" Watermark="请输入内容..." Text="{Binding InputText}" />
-                        <Button Content="选择文件" Command="{Binding OpenFileCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}"
-                                HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="配置错误码和关键词" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                       
+    <Grid>
+        <DockPanel Margin="20">
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="0 0 0 10" Spacing="10">
+                    <StackPanel Orientation="Vertical" Margin="0 0 0 10" Spacing="10">
+                        <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                            <TextBox Width="470" Watermark="请输入内容..." Text="{Binding InputText}" />
+                            <Button Content="选择文件" Command="{Binding OpenFileCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="设置用户名和密码" Command="{Binding OpenLoginCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="配置错误码和关键词" Command="{Binding IssueConfigCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
 
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                        <Button Content="实时0算力矿机" Command="{Binding FilterT0Command}"
-                                HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="平均0算力矿机" Command="{Binding FilterP0Command}"
-                                HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="待维修IP" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="待下架IP" Command="{Binding IssueConfigCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="定位问题" Command="{Binding DetectIssueCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="功能测试" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
-                        <Button Content="点亮" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="重启" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="列出风扇问题" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="唤醒矿机" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="弹窗" Command="{Binding MessageCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                        <Button Content="导出表格" Command="{Binding ExportCommand}" HorizontalContentAlignment="Center"
-                                Width="150" />
-                    </StackPanel>
 
-                    <TextBlock Foreground="Green" FontWeight="Bold" FontSize="16" Text="{Binding MessageText}"
-                               Margin="0,0,0,5" />
-
-                </StackPanel>
-                <StackPanel Margin="20,0,0,5" Orientation="Horizontal">
-                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
-                        <StackPanel Width="100">
-                            <TextBlock Text="实时0算力机器" Margin="0,0,0,5" />
-                            <CheckBox Content="风扇故障" IsChecked="{Binding FanIssue}" />
-                            <CheckBox Content="高温" IsChecked="{Binding FanIssue}" />
-                            <CheckBox Content="网络问题" IsChecked="{Binding FanIssue}" />
-                            <CheckBox Content="掉电压" IsChecked="{Binding FanIssue}" />
                         </StackPanel>
-                    </Border>
-                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
-                        <StackPanel>
-
-                            <TextBlock Text="一直0算力机器" Margin="0,0,0,5" />
-                            <CheckBox Content="掉芯片" IsChecked="{Binding FanIssue}" />
-                            <CheckBox Content="掉算力板" IsChecked="{Binding FanIssue}" />
+                        <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                            <Button Content="实时0算力矿机" Command="{Binding FilterT0Command}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="平均0算力矿机" Command="{Binding FilterP0Command}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="待维修IP" Command="{Binding IssueConfigCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="待下架IP" Command="{Binding IssueConfigCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="定位问题" Command="{Binding DetectIssueCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="功能测试" Command="{Binding TestCommand}" HorizontalContentAlignment="Center"
+                                    Width="150" />
                         </StackPanel>
-                    </Border>
-
+                        <StackPanel Orientation="Horizontal" Margin="0 0 0 10" Spacing="10">
+                            <Button Content="点亮" Command="{Binding LightOnCommand}" HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="重启" Command="{Binding RebootCommand}" HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="列出风扇问题" Command="{Binding LightOnCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="唤醒矿机" Command="{Binding RebootCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="弹窗" Command="{Binding MessageCommand}" HorizontalContentAlignment="Center"
+                                    Width="150" />
+                            <Button Content="导出表格" Command="{Binding ExportCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    Width="150" />
+                        </StackPanel>
+                        <TextBlock Foreground="Green" FontWeight="Bold" FontSize="16" Text="{Binding MessageText}"
+                                   Margin="0,0,0,5" />
+                    </StackPanel>
+                    <StackPanel Margin="20,0,0,5" Orientation="Horizontal">
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
+                            <StackPanel Width="100">
+                                <TextBlock Text="实时0算力机器" Margin="0,0,0,5" />
+                                <CheckBox Content="风扇故障" IsChecked="{Binding FanIssue}" />
+                                <CheckBox Content="高温" IsChecked="{Binding FanIssue}" />
+                                <CheckBox Content="网络问题" IsChecked="{Binding FanIssue}" />
+                                <CheckBox Content="掉电压" IsChecked="{Binding FanIssue}" />
+                            </StackPanel>
+                        </Border>
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="10">
+                            <StackPanel>
+                                <TextBlock Text="一直0算力机器" Margin="0,0,0,5" />
+                                <CheckBox Content="掉芯片" IsChecked="{Binding FanIssue}" />
+                                <CheckBox Content="掉算力板" IsChecked="{Binding FanIssue}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                 </StackPanel>
 
             </StackPanel>
 
-
-        </StackPanel>
-
-        <!-- 上半部分 -->
+            <!-- 上半部分 -->
 
 
-        <!-- 下半部分：左文本框，右表格 -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="7*" />
-            </Grid.ColumnDefinitions>
+            <!-- 下半部分：左文本框，右表格 -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="7*" />
+                </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0"
-                     AcceptsReturn="True"
-                     Text="{Binding OutputText}"
-                     IsReadOnly="False"
-                     FontSize="14" />
-            <DataGrid Grid.Column="2" ItemsSource="{Binding TableDataMiner}" AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="数据行">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding Cells}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding}" Margin="4,0" />
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                <TextBox Grid.Column="0"
+                         AcceptsReturn="True"
+                         Text="{Binding OutputText}"
+                         IsReadOnly="False"
+                         FontSize="14" />
+                <DataGrid Grid.Column="2" ItemsSource="{Binding TableDataMiner}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="数据行">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding Cells}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" Margin="4,0" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </DockPanel>
+        <Grid Background="#80000000"
+              IsVisible="{Binding IsLoading}"
+              ZIndex="10">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar IsIndeterminate="True" Width="100" Height="20" />
+                <TextBlock Text="加载中，请稍候..." Foreground="White" Margin="10" HorizontalAlignment="Center" />
+            </StackPanel>
         </Grid>
-    </DockPanel>
-
+    </Grid>
 </Window>

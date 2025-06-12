@@ -30,8 +30,8 @@ public static class LogHelper
         string[] logList = hlogStr.Split('\n');
         // 定义错误模式及对应标签，元组：(匹配方式, 模式字符串, 标签)
         var errorPatterns = LoadErrorPatterns();
-
-        foreach (var logStrRaw in logList)
+        // 倒叙，方便定位问题
+        foreach (var logStrRaw in logList.Reverse())
         {
             string logStr = logStrRaw ?? "";
 

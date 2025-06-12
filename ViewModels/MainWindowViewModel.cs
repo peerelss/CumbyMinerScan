@@ -28,6 +28,14 @@ public class MainWindowViewModel : ViewModelBase
     public bool FanIssue { get; set; }
     public bool HashBoardIssue { get; set; }
     public bool PowerIssue { get; set; }
+    private bool _isLoading = false;
+
+    public bool IsLoading
+    {
+        get => _isLoading;
+        set => this.RaiseAndSetIfChanged(ref _isLoading, value);
+    }
+
     public bool TempIssue { get; set; }
     public string RequestUsername { get; set; } = "root";
     public string RequestPassword { get; set; } = "root";
@@ -156,10 +164,42 @@ public class MainWindowViewModel : ViewModelBase
         {
             // 重启列表中机器
         });
-        TestCommand = ReactiveCommand.Create(() =>
+        TestCommand = ReactiveCommand.Create(async () =>
         {
-            var ips = GetIPList();
-            
+            MessageText = "开始检测0算计机器的问题";
+            IsLoading = true;
+            string prefix = "http://";
+            string suffix = "/cgi-bin/log.cgi";
+            var ips = _outputText
+                .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(ip => ip.Trim()) // 清除前后空格
+                .ToList();
+
+            var urls = new List<string>();
+            foreach (var ip in ips)
+            {
+                urls.Add("http://" + ip + "/cgi-bin/hlog.cgi");
+            }
+            // 调用并行请求方法，await不会阻塞UI线程
+
+            List<string> htmlResults = await HttpHelper.GetHtmlListParallelAsync(urls);
+            var box = MessageBoxManager
+                .GetMessageBoxStandard("Caption", "所有IP已经解析完毕",
+                    ButtonEnum.YesNo);
+            var minerErrors = new List<DataRowViewModel>();
+            for (int i = 0; i < urls.Count; i++)
+            {
+                var errorMiner = LogHelper.ParseLog(ips[i], htmlResults[i]);
+                minerErrors.Add(errorMiner);
+            }
+            TableDataMiner.Clear();
+            foreach (var row in minerErrors)
+            {
+                TableDataMiner.Add(row);
+            }
+
+            MessageText = "检测0算计机器的问题完毕";
+            IsLoading = false;
         });
         LightOnCommand = ReactiveCommand.CreateFromTask(async () =>
         {
@@ -195,8 +235,9 @@ public class MainWindowViewModel : ViewModelBase
         DetectIssueCommand = ReactiveCommand.Create(async () =>
         {
             MessageText = "开始检测0算计机器的问题";
+            IsLoading = true;
             string prefix = "http://";
-            string suffix = "/cgi-bin/hlog.cgi";
+            string suffix = "/cgi-bin/log.cgi";
             var ips = _outputText
                 .Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(ip => ip.Trim()) // 清除前后空格
@@ -228,6 +269,7 @@ public class MainWindowViewModel : ViewModelBase
             }
 
             MessageText = "检测0算计机器的问题完毕";
+            IsLoading = false;
         });
         IssueConfigCommand = ReactiveCommand.Create(OnSubmit);
         SelectCommand = ReactiveCommand.Create(OnSelect);
@@ -304,7 +346,7 @@ public class MainWindowViewModel : ViewModelBase
                 out float realVal);
             bool avgParsed = float.TryParse(avgStr.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture,
                 out float avgVal);
-            if (realVal == 0)
+            if (realVal == 0&& avgVal != 0)
             {
                 _filteredT0Rows.Add(row);
             }
